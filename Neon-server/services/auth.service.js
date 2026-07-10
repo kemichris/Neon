@@ -5,9 +5,11 @@ import Account from '../models/account.model.js';
 
 import ApiError from '../utils/apiError.utils.js';
 import { hashPassword } from '../utils/password.utils.js';
-import { generateAccountNumber } from '../utils/account.utils.js';
+import { generateAccountNumber, comparePassword } from '../utils/account.utils.js';
 import { fromSmallestUnit } from '../utils/money.utils.js';
+import { generateAccessToken } from '../utils/jwt.utils.js';
 
+// user registration service
 export const register = async (userData) => {
     const {
         firstName,
@@ -107,4 +109,51 @@ export const register = async (userData) => {
     } finally {
         await session.endSession();
     }
+};
+
+// user login service
+export const login = async (userData) => {
+    const {
+        email,
+        password
+    } = userData;
+
+    // Find user by email
+    const user = await User.findOne({ email }).populate('role');
+
+    if (!user) {
+        throw new ApiError(401, 'Invalid email or password.');
+    }
+
+    // Compare password
+    const isPasswordValid = await comparePassword(
+        password,
+        user.password
+    );
+
+    if (!isPasswordValid) {
+        throw new ApiError(401, 'Invalid email or password.');
+    }
+
+    // Generate access token
+    const accessToken = generateAccessToken({
+        id: user._id,
+        role: user.role.name
+    });
+
+    // Update last login
+    user.lastLogin = new Date();
+
+    await user.save();
+
+    return {
+        accessToken,
+        user: {
+            id: user._id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            role: user.role.name
+        }
+    };
 };
