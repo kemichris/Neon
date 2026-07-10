@@ -4,8 +4,8 @@ import Role from '../models/role.model.js';
 import Account from '../models/account.model.js';
 
 import ApiError from '../utils/apiError.utils.js';
-import { hashPassword } from '../utils/password.utils.js';
-import { generateAccountNumber, comparePassword } from '../utils/account.utils.js';
+import { hashPassword, comparePassword } from '../utils/password.utils.js';
+import { generateAccountNumber } from '../utils/account.utils.js';
 import { fromSmallestUnit } from '../utils/money.utils.js';
 import { generateAccessToken } from '../utils/jwt.utils.js';
 
