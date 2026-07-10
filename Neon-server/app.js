@@ -3,6 +3,8 @@ import cors from "cors";
 import helmet from "helmet";
 
 import routes from "./routes/index.routes.js";
+import errorHandler from "./middlewares/errorHandler.js";
+import notFound from "./middlewares/notFound.js";
 
 const app = express();
 
@@ -23,6 +25,10 @@ app.get("/api/health", (req, res) => {
 });
 
 /* ---------------- API Routes ---------------- */
-app.use("/api", routes);
+app.use('/api', routes);
+
+app.use(notFound);
+
+app.use(errorHandler);
 
 export default app;

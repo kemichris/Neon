@@ -9,6 +9,10 @@ export const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    middleName: {
+        type: String,
+        default: null
+    },
     email: {
         type: String,
         required: true,
