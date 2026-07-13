@@ -7,7 +7,7 @@ import { transferFunds } from '../controllers/transaction.controller.js';
 const router = express.Router();
 
 // Transfer funds route
-router.post('/transfer', protect, authorize('user'), validate(transferFundsSchema), transferFunds);
+router.post('/transfer', protect, authorize('user'), validate(transferSchema), transferFunds);
 
 export default router;
 
