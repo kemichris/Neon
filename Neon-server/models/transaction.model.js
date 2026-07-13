@@ -2,28 +2,32 @@ import mongoose from 'mongoose';
 
 const transactionSchema = new mongoose.Schema(
     {
-        sender: {
+        // The owner of this transaction record
+        owner: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true
         },
 
-        receiver: {
+        // The owner's account involved in the transaction
+        ownerAccount: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Account',
+            required: true
+        },
+
+        // The other user involved in the transaction
+        counterParty: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
-            required: true
+            default: null
         },
 
-        senderAccount: {
+        // The other account involved in the transaction
+        counterPartyAccount: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Account',
-            required: true
-        },
-
-        receiverAccount: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Account',
-            required: true
+            default: null
         },
 
         amount: {
@@ -44,6 +48,7 @@ const transactionSchema = new mongoose.Schema(
             required: true
         },
 
+        // Is this transaction a debit or credit from the OWNER'S perspective?
         direction: {
             type: String,
             enum: ['credit', 'debit'],
@@ -53,17 +58,24 @@ const transactionSchema = new mongoose.Schema(
         reference: {
             type: String,
             required: true,
-            unique: true
+            unique: true,
+            trim: true
         },
 
         description: {
             type: String,
-            default: ''
+            default: '',
+            trim: true
         },
 
         status: {
             type: String,
-            enum: ['pending', 'completed', 'failed'],
+            enum: [
+                'pending',
+                'completed',
+                'failed',
+                'reversed'
+            ],
             default: 'pending'
         }
     },
