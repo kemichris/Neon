@@ -141,7 +141,6 @@ export const transferFunds = async (senderId, transferData) => {
 };
 
 // Deposit funds
-// Deposit funds service
 export const depositFunds = async (userId, depositData, receiptFile) => {
     const { amount, method } = depositData;
 

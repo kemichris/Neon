@@ -22,7 +22,6 @@ export const transferFunds = async (req, res, next) => {
 // Deposit funds
 export const depositFunds = async (req, res, next) => {
     try {
-        console.log(req.file);
         const result = await transactionService.depositFunds(
             req.user._id,
             req.body,
