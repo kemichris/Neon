@@ -17,3 +17,16 @@ export const transferSchema = z.object({
         .max(200)
         .optional()
 });
+
+// deposit schema
+export const depositSchema = z.object({
+    amount: z.coerce.number()
+        .int()
+        .positive('Amount must be greater than zero.'),
+
+    method: z
+        .string()
+        .trim()
+        .min(1, 'Payment method is required.')  
+        
+});

@@ -1,9 +1,13 @@
 import mongoose from 'mongoose';
+import cloudinary from '../utils/cloudinary.utils.js';
 import Account from '../models/account.model.js';
 import Transaction from '../models/transaction.model.js';
+import PaymentMethod from '../models/paymentMethod.model.js';
 import ApiError from '../utils/apiError.utils.js';
 import { generateTransactionReference } from '../utils/transaction.utils.js';
+import { uploadImage, deleteImage } from '../utils/cloudinary.utils.js';
 
+// Transfer funds service
 export const transferFunds = async (senderId, transferData) => {
     const {
         recipientAccountNumber,
@@ -132,6 +136,129 @@ export const transferFunds = async (senderId, transferData) => {
         }
         throw error;
     } finally {
+        await session.endSession();
+    }
+};
+
+// Deposit funds
+// Deposit funds service
+export const depositFunds = async (userId, depositData, receiptFile) => {
+    const { amount, method } = depositData;
+
+    // Start MongoDB session
+    const session = await mongoose.startSession();
+
+    // Will hold the uploaded Cloudinary image details
+    let uploadedReceipt = null;
+
+    try {
+        session.startTransaction();
+
+        // Ensure receipt was uploaded
+        if (!receiptFile) {
+            throw new ApiError(400, 'Deposit receipt is required.');
+        }
+
+        // Find user's account
+        const account = await Account.findOne({
+            owner: userId
+        }).session(session);
+
+        if (!account) {
+            throw new ApiError(404, 'Account not found.');
+        }
+
+        // Ensure account is active
+        if (account.status !== 'active') {
+            throw new ApiError(400, 'Account is not active.');
+        }
+
+        // Upload receipt to Cloudinary
+        uploadedReceipt = await uploadImage(
+            receiptFile.buffer,
+            'neon/deposits'
+        );
+
+        // Generate unique transaction reference
+        const reference = generateTransactionReference();
+
+        // Create pending deposit transaction
+        const [transaction] = await Transaction.create(
+            [
+                {
+                    owner: userId,
+                    ownerAccount: account._id,
+
+                    amount,
+                    currency: account.currency,
+
+                    type: 'deposit',
+                    direction: 'credit',
+
+                    reference,
+                    description: `Deposit via ${method}`,
+
+                    status: 'pending',
+
+                    paymentMethod: method,
+
+                    // Cloudinary data
+                    receipt: uploadedReceipt.secure_url,
+                    receiptPublicId: uploadedReceipt.public_id
+                }
+            ],
+            { session }
+        );
+
+        // Commit database transaction
+        await session.commitTransaction();
+
+        // Return transaction details
+        return {
+            transactionId: transaction._id,
+            reference: transaction.reference,
+            amount: transaction.amount,
+            currency: transaction.currency,
+            paymentMethod: transaction.paymentMethod,
+            receipt: transaction.receipt,
+            status: transaction.status,
+            createdAt: transaction.createdAt
+        };
+
+    } catch (error) {
+
+        // Roll back database transaction
+        if (session.inTransaction()) {
+            await session.abortTransaction();
+        }
+
+        // Delete uploaded receipt if the database transaction failed
+        if (uploadedReceipt?.public_id) {
+            try {
+                await deleteImage(uploadedReceipt.public_id);
+            } catch (cloudinaryError) {
+                console.error(
+                    'Failed to delete uploaded receipt:',
+                    cloudinaryError.message
+                );
+            }
+        }
+
+        // Re-throw known application errors
+        if (error instanceof ApiError) {
+            throw error;
+        }
+
+        // Throw a generic server error for unexpected failures
+        console.error(error);
+
+        throw new ApiError(
+            500,
+            error.message
+        );
+
+    } finally {
+        // Always end the session
         await session.endSession();
     }
 };

@@ -66,7 +66,19 @@ const transactionSchema = new mongoose.Schema(
             default: '',
             trim: true
         },
-
+        method: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'PaymentMethod',
+            default: null
+        },
+        receipt: {
+            type: String,
+            default: null
+        },
+        receiptPublicId: {
+            type: String,
+            default: null
+        },
         status: {
             type: String,
             enum: [
