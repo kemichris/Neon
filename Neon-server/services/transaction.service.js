@@ -261,3 +261,66 @@ export const depositFunds = async (userId, depositData, receiptFile) => {
         await session.endSession();
     }
 };
+
+// Get transaction history
+export const getTransactionHistory = async (userId, query) => {
+    // Extract query parameters with default values
+    const {
+        page = 1,
+        limit = 10,
+        type,
+        status
+    } = query;
+
+    // Ensure page is at least 1
+    const pageNumber = Math.max(1, Number(page) || 1);
+
+    // Prevent clients from requesting an excessive number of records
+    const limitNumber = Math.min(
+        100,
+        Math.max(1, Number(limit) || 10)
+    );
+
+    // Calculate how many records to skip
+    const skip = (pageNumber - 1) * limitNumber;
+
+    // Base filter - users can only see their own transactions
+    const filter = {
+        owner: userId
+    };
+
+    // Filter by transaction type if provided
+    if (type) {
+        filter.type = type;
+    }
+
+    // Filter by transaction status if provided
+    if (status) {
+        filter.status = status;
+    }
+
+    // Fetch transactions and total count simultaneously
+    const [transactions, totalTransactions] = await Promise.all([
+        Transaction.find(filter)
+            .sort({ createdAt: -1 }) // Newest first
+            .skip(skip)
+            .limit(limitNumber),
+
+        Transaction.countDocuments(filter)
+    ]);
+
+    // Return paginated response
+    return {
+        transactions,
+        pagination: {
+            totalTransactions,
+            currentPage: pageNumber,
+            totalPages: Math.ceil(totalTransactions / limitNumber),
+            limit: limitNumber,
+            hasPreviousPage: pageNumber > 1,
+            hasNextPage:
+                pageNumber <
+                Math.ceil(totalTransactions / limitNumber)
+        }
+    };
+};

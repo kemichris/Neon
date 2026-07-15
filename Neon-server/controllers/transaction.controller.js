@@ -38,3 +38,27 @@ export const depositFunds = async (req, res, next) => {
         next(error);
     }
 };
+
+// Get transaction history
+export const getTransactionHistory = async (req, res, next) => {
+    try {
+        // Get the logged-in user's ID
+        const userId = req.user._id;
+
+        // Pass the query parameters to the service
+        const transactionHistory = await transactionService.getTransactionHistory(
+            userId,
+            req.query
+        );
+
+        // Return the response
+        return res.status(200).json({
+            success: true,
+            message: 'Transaction history retrieved successfully.',
+            data: transactionHistory
+        });
+
+    } catch (error) {
+        next(error);
+    }
+};
