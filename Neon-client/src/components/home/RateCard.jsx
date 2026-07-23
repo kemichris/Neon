@@ -1,7 +1,7 @@
 export function RateCard({rateIcon, rate, rateReturn, rateName, rateInfo, badgeIcon, badgeName}) {
     return (
         <div className="rate-card">
-            <div className="top-icon">
+            <div className="rate-icon">
                 {rateIcon}
             </div>
             <h4>{rate}</h4>

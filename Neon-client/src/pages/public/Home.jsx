@@ -1,6 +1,7 @@
 import { Navbar } from "../../components/Navigation/Navbar"
 import { HeroSection } from "../../components/home/HeroSection"
 import { RateSection } from "../../components/home/RateSection"
+import { ServiceSection } from "../../components/home/ServiceSection"
 export function Home() {
     return (
         <>
@@ -8,6 +9,7 @@ export function Home() {
             <Navbar />
             <HeroSection />
             <RateSection />
+            <ServiceSection />
         </>
     )
 }
