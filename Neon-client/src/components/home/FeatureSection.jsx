@@ -1,0 +1,53 @@
+import { FaHandshake } from "react-icons/fa";
+import { AiOutlineStock } from "react-icons/ai";
+import { IoIosPeople } from "react-icons/io";
+import { FaHeart } from "react-icons/fa";
+import { SectionHeader } from "../ui/SectionHeader";
+import { FeatureCard } from "./FeatureCard";
+import featureImg1 from "../../assets/images/feature-img1.avif"
+import featureImg2 from "../../assets/images/feature-img2.avif"
+import featureImg3 from "../../assets/images/feature-img3.avif"
+import featureImg4 from "../../assets/images/feature-img4.avif"
+
+export function FeatureSection() {
+    return (
+        <div className="feature-section">
+            <div className="feature-details">
+                <SectionHeader icon={<FaHandshake />} title="Member-Focused Banking" />
+                <h2>Building Strength Together</h2>
+                <p>Nexavaultnv is a full-service credit union built on the foundation of
+                    providing our members with every step of their financial journey.
+                    We're committed to helping our members achieve their financial
+                    goals through personalized service and competitive rates.
+                </p>
+                <FeatureCard
+                    featureIcon={<AiOutlineStock />}
+                    featureName="Competitive Rates"
+                    featureDetails="Better rates on savings, loans, and credit cards designed to maximize your financial growth."
+                />
+                <FeatureCard
+                    featureIcon={<IoIosPeople />}
+                    featureName="Member-Focused"
+                    featureDetails="We're owned by our members, not shareholders. Your success is our priority."
+                />
+                <FeatureCard
+                    featureIcon={<FaHeart />}
+                    featureName="Community Committed"
+                    featureDetails="Supporting local communities and causes that matter to our members."
+                />
+            </div>
+            <div className="feature-images">
+                <img src={featureImg1} alt="" />
+                <img src={featureImg2} alt="" />
+                <img src={featureImg3} alt="" />
+                <img src={featureImg4} alt="" />
+            </div>
+        </div>
+    )
+}
+
+
+
+
+
+
