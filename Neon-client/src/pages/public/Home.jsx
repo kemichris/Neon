@@ -1,7 +1,8 @@
-import { Navbar } from "../../components/Navigation/Navbar"
-import { HeroSection } from "../../components/home/HeroSection"
-import { RateSection } from "../../components/home/RateSection"
-import { ServiceSection } from "../../components/home/ServiceSection"
+import { Navbar } from "../../components/Navigation/Navbar";
+import { HeroSection } from "../../components/home/HeroSection";
+import { RateSection } from "../../components/home/RateSection";
+import { ServiceSection } from "../../components/home/ServiceSection";
+import { CallToActionSection } from "../../components/home/CallToActionSection";
 export function Home() {
     return (
         <>
@@ -10,6 +11,7 @@ export function Home() {
             <HeroSection />
             <RateSection />
             <ServiceSection />
+            <CallToActionSection />
         </>
     )
 }
