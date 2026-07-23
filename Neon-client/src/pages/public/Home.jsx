@@ -5,6 +5,7 @@ import { ServiceSection } from "../../components/home/ServiceSection";
 import { CallToActionSection } from "../../components/home/CallToActionSection";
 import { FeatureSection } from "../../components/home/FeatureSection";
 import { ReviewSection } from "../../components/home/ReviewSection";
+import { ContactSection } from "../../components/home/ContactSection";
 export function Home() {
     return (
         <>
@@ -16,6 +17,7 @@ export function Home() {
             <CallToActionSection />
             <FeatureSection />
             <ReviewSection />
+            <ContactSection />
         </>
     )
 }
