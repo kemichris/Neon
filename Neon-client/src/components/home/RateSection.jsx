@@ -1,0 +1,70 @@
+import { RiExchangeFundsFill } from "react-icons/ri";
+import { FaPiggyBank } from "react-icons/fa";
+import { FaStar } from "react-icons/fa6";
+import { GiSevenPointedStar } from "react-icons/gi";
+import { FaCoins } from "react-icons/fa";
+import { FaCreditCard } from "react-icons/fa";
+import { GiReceiveMoney } from "react-icons/gi";
+import { FaInfoCircle } from "react-icons/fa";
+
+import { SectionHeader } from "../ui/SectionHeader"
+import { RateCard } from "./RateCard";
+
+
+export function RateSection() {
+    return (
+        <div className="rate-section">
+            <SectionHeader icon={<RiExchangeFundsFill />} title="Neon Bank Rates" />
+            <h2>Neon Member Care</h2>
+            <p>Discover competitive rates designed to help your money grow faster</p>
+
+            <div className="rate-cards">
+                <RateCard
+                    rateIcon={<FaPiggyBank />} 
+                    rate="3.75%" 
+                    rateReturn="APY" 
+                    rateName="HIGH YIELD SAVINGS" 
+                    rateInfo="High Yield Savings Rate" 
+                    badgeIcon={<FaStar />} 
+                    badgeName="FEATURED"
+                />
+                <RateCard
+                    rateIcon={<GiSevenPointedStar />} 
+                    rate="3.65%" 
+                    rateReturn="APY" 
+                    rateName="18 MONTH CERTIFICATE" 
+                    rateInfo="Neon Certificate Rates" 
+                    badgeIcon={<FaCoins />} 
+                    badgeName="SAVINGS"
+                />
+                <RateCard
+                    rateIcon={<FaCreditCard />} 
+                    rate="4.00%" 
+                    rateReturn="APR" 
+                    rateName="CREDIT CARDS" 
+                    rateInfo="Neon Credit Card Rates" 
+                    badgeIcon={<FaCreditCard />} 
+                    badgeName="CREDIT"
+                />
+                <RateCard
+                    rateIcon={<GiReceiveMoney />} 
+                    rate="15.39%" 
+                    rateReturn="APR" 
+                    rateName="LOANS" 
+                    rateInfo="Neon Standard Loan Rates" 
+                    badgeIcon={<GiReceiveMoney />} 
+                    badgeName="MORTGAGE"
+                />
+            </div>
+
+            <div className="rate-info">
+                {<FaInfoCircle />}
+                <p>Annual Percentage Yield. Rates subject to change. Terms and conditions apply.</p>
+            </div>
+        </div>
+    )
+}
+
+
+
+

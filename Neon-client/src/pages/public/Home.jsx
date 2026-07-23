@@ -1,9 +1,13 @@
 import { Navbar } from "../../components/Navigation/Navbar"
-
+import { HeroSection } from "../../components/home/HeroSection"
+import { RateSection } from "../../components/home/RateSection"
 export function Home() {
-    return(
-        <div className="home">
+    return (
+        <>
+            <title>Neon | Home</title>
             <Navbar />
-        </div>
+            <HeroSection />
+            <RateSection />
+        </>
     )
 }
